@@ -9,17 +9,22 @@ interface datas{
 }
 const page = () => {
 
-    const data1:Array<any> = [
+    const handleClick = () => {
+        console.log("clicked");
+        
+    }
+
+    const data1:any[] = [
        1,2
     ]
-    const [data, setData] = useState<Array<number>|null>(null);
+    const [data, setData] = useState<number[]|null>(null);
 
     function test(): string {
         return "test";
       }
     return (
         <div>
-            <Button text={"hi heloo"} />
+            <Button text={"hi heloo"} onClick={handleClick}/>
             {/* {data1.map((item:data)=>{
                 return <div key={item.id}>{item.fist_name}</div>
             })} */}
