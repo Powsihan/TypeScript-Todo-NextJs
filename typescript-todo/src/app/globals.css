@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.main-text {
+    color: darkblue;
+    font-weight: 700;
+}
+
+.table-striped>tbody>tr:nth-child(2n+1)>td,
+.table-striped>tbody>tr:nth-child(2n+1)>th {
+    background-color: rgb(236, 240, 255);
+}
+
+.status-box {
+    border-radius: 4px;
+    font-weight: 600;
+    margin: auto;
+    text-align: center;
+    padding: 0 10px;
+}
+
+.completed {
+    color: darkgreen;
+    background: #9cffd3 !important;
+}
+
+.pending {
+    color: rgb(139, 3, 3);
+    background: #ff9c9c !important;
+}
+.thead-fixed{
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+}
+
+.pointer-cursor{
+    cursor: pointer;
+}
