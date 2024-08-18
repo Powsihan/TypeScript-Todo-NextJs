@@ -5,6 +5,8 @@ import connectDB from "./config/db.js";
 import cookieParser from "cookie-parser";
 import http from "http";
 import taskRoutes from "./routes/task.routes.js";
+import userRoutes from "./routes/user.routes.js";
+import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 
 dotenv.config();
 connectDB();
@@ -16,6 +18,10 @@ app.use(cookieParser());
 
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/task", taskRoutes);
+app.use("/api/users", userRoutes);
+
+app.use(notFound);
+app.use(errorHandler);
 
 const server = http.createServer(app);
 

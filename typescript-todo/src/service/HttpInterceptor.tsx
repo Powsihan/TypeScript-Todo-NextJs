@@ -1,12 +1,12 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
-// import Cookies from "js-cookie";
+import Cookies from "js-cookie";
 
 class HttpInterceptor {
   private instance: AxiosInstance;
 
   constructor() {
     const defaultOptions: AxiosRequestConfig = {
-      baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // Use the correct environment variable
+      baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, 
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -17,12 +17,14 @@ class HttpInterceptor {
     this.instance.interceptors.request.use(
       async (request) => {
         try {
-          // Uncomment and configure if you need authentication headers
-          // const authToken = Cookies.get("user", { path: "/" });
-          // if (authToken) {
-          //   const parsedToken = JSON.parse(authToken).token; // Extract the token
-          //   request.headers.Authorization = `Bearer ${parsedToken}`;
-          // }
+
+          const authToken = Cookies.get("user");
+          if (authToken) {
+            const parsedToken = JSON.parse(authToken)?.token; 
+            if (parsedToken) {
+              request.headers.Authorization = `Bearer ${parsedToken}`;
+            }
+          }
         } catch (error) {
           console.error(error);
         }

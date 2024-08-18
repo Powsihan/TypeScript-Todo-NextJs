@@ -2,13 +2,15 @@
 import { deleteTask, GetAllTasks } from '@/api/task';
 import Button from '@/components/Button'
 import { get } from 'http';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, use } from 'react'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from '@mui/material';
 import TaskModal from '@/components/TaskModal';
 import ConfirmationModal from '@/components/ConfirmationModal';
+import { getUserInfo } from '@/api/user';
+import useUserStore from '@/store/useUserStore';
 
 interface Task {
   name: string;
@@ -16,6 +18,7 @@ interface Task {
   status: boolean;
   _id: string;
 }
+
 
 const page = () => {
   const [taskDetails, setTaskDetails] = useState<Task[] | []>([]);
@@ -25,6 +28,7 @@ const page = () => {
   const [selectedTaskDetails, setSelectedTaskDetails] = useState<Task | null>(null);
   const [openConfirmationModal, setOpenConfirmationModal] = useState<boolean>(false);
   const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
+  const { userData, setUserData } = useUserStore();
 
   const [open, setOpen] = useState(false);
 
@@ -48,6 +52,25 @@ const page = () => {
   useEffect(() => {
     fetchTasks();
   }, []);
+
+
+  useEffect(() => {
+    if (userData) {
+      setUserData(userData);
+    } else {
+      try {
+        setLoading(true);
+        getUserInfo((res) => {
+          setLoading(false);
+          if (res && res.status === 200) {
+            setUserData(res.data);
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [userData, setUserData]);
 
   const openAddTaskModal = () => {
     setMode('add');
@@ -105,6 +128,8 @@ const page = () => {
         <h1 className={` text-4xl font-semibold p-5`}>
           To-Do-APP
         </h1>
+        {userData && <h2 className="text-2xl font-semibold p-5">
+          Welcome {userData.name} </h2>}
         {loading && <div>Loading...</div>}
         {error && <div>{error}</div>}
         <div className="grid w-full place-items-center p-5">
