@@ -75,3 +75,28 @@ export const updateTask = (
       }
     });
 };
+
+
+export const deleteTask = (
+  id: string,
+  callback: (response: AxiosResponse) => void
+): void => {
+  const endpoint = `/task/${id}`;
+
+  http
+    .delete(endpoint)
+    .then((response: AxiosResponse) => {
+      callback(response);
+    })
+    .catch((error) => {
+      if (error.response) {
+        callback(error.response);
+      } else {
+        console.error("Error:", error);
+        callback({
+          status: 500,
+          data: { message: "Internal Server Error" },
+        } as AxiosResponse);
+      }
+    });
+};
