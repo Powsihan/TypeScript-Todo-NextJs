@@ -9,8 +9,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from '@mui/material';
 import TaskModal from '@/components/TaskModal';
 import ConfirmationModal from '@/components/ConfirmationModal';
-import { getUserInfo } from '@/api/user';
+import { getUserInfo, logoutUser } from '@/api/user';
 import useUserStore from '@/store/useUserStore';
+import { useRouter } from 'next/navigation';
 
 interface Task {
   name: string;
@@ -29,6 +30,7 @@ const page = () => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState<boolean>(false);
   const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
   const { userData, setUserData } = useUserStore();
+  const router = useRouter();
 
   const [open, setOpen] = useState(false);
 
@@ -118,6 +120,17 @@ const page = () => {
   };
 
 
+  const LogoutUser = () => {
+    logoutUser((response) => {
+      if (response.status === 200) {
+        setUserData(null);
+        router.push('/');
+      } else {
+        setError('Failed to logout');
+      }
+    });
+  }
+
 
 
 
@@ -200,6 +213,9 @@ const page = () => {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className='flex justify-end pt-7'>
+          <Button text="Logout" onClick={LogoutUser} />
         </div>
       </div>
       <TaskModal open={open} onClose={closeTaskModal} mode={mode} taskToView={selectedTaskDetails} />

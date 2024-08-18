@@ -30,7 +30,7 @@ export default function Home() {
 
     setLoading(true);
     setError(null);
-    
+
     loginUser({ email, password }, (response) => {
       setLoading(false);
       if (response.status === 200) {
@@ -40,12 +40,15 @@ export default function Home() {
         setError(response.data.message || "Login failed. Please try again.");
       }
     });
-   
+
   };
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center font-sans">
-      <form  className="bg-white p-6 rounded-lg shadow-lg w-80">
+      <h1 className={` text-4xl font-bold p-5 text-blue-900`}>
+        Login Here
+      </h1>
+      <form className="bg-white p-6 rounded-lg shadow-lg w-80">
         <div className="flex flex-col gap-4">
           <div>
             <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-700">
@@ -74,7 +77,8 @@ export default function Home() {
             />
           </div>
           {error && <p className="text-red-600 text-sm">{error}</p>}
-          <Button text="Sign In" onClick={handleSubmit} loading={loading}/>
+          <div className="flex justify-center">
+            <Button text="Sign In" onClick={handleSubmit} loading={loading} /></div>
           <div className="text-center text-sm mt-4">
             Don't have an account?{" "}
             <span
