@@ -7,7 +7,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from '@mui/material';
-import AddTask from '@/components/AddTask';
+import TaskModal from '@/components/TaskModal';
 
 interface Task {
   name: string;
@@ -20,6 +20,8 @@ const page = () => {
   const [taskDetails, setTaskDetails] = useState<Task[] | []>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [mode, setMode] = useState<'add' | 'view' | 'edit'>('add');
+  const [selectedTaskDetails, setSelectedTaskDetails] = useState<Task | null>(null);
 
   const [open, setOpen] = useState(false);
 
@@ -45,13 +47,27 @@ const page = () => {
   }, []);
 
   const openAddTaskModal = () => {
+    setMode('add');
     setOpen(true);
   };
 
-  const closeAddTaskModal = () => {
+  const closeTaskModal = () => {
     setOpen(false);
     fetchTasks();
   };
+
+  const openViewTaskModal = (task: Task) => () => {
+    setMode('view');
+    setSelectedTaskDetails(task);
+    setOpen(true);
+  };
+
+  const openEditTaskModal = (task: Task) => () => {
+    setMode('edit');
+    setSelectedTaskDetails(task);
+    setOpen(true);
+  }
+
 
 
 
@@ -63,7 +79,7 @@ const page = () => {
         </h1>
         {loading && <div>Loading...</div>}
         {error && <div>{error}</div>}
-        <div className="grid w-full place-items-end p-5">
+        <div className="grid w-full place-items-center p-5">
           <Button text="Add Task" onClick={openAddTaskModal} />
         </div>
         <div
@@ -113,12 +129,12 @@ const page = () => {
                   <td
                     className={`cursor-pointer px-6 py-4 whitespace-nowrap flex flex-column gap-2`}
                   >
-                    <IconButton>
+                    <IconButton onClick={openViewTaskModal(data)}>
                       <VisibilityIcon
                         sx={{ color: "grey" }}
                       />
                     </IconButton>
-                    <IconButton>
+                    <IconButton onClick={openEditTaskModal(data)}>
                       <EditIcon
                         sx={{ color: "green" }}
                       />
@@ -133,7 +149,7 @@ const page = () => {
           </table>
         </div>
       </div>
-      <AddTask open={open} onClose={closeAddTaskModal} />
+      <TaskModal open={open} onClose={closeTaskModal} mode={mode} taskToView={selectedTaskDetails} />
     </div>
   )
 }
