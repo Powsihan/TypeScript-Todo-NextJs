@@ -7,6 +7,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from '@mui/material';
+import AddTask from '@/components/AddTask';
 
 interface Task {
   name: string;
@@ -17,16 +18,40 @@ interface Task {
 
 const page = () => {
   const [taskDetails, setTaskDetails] = useState<Task[] | []>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
+  const [open, setOpen] = useState(false);
 
+  const fetchTasks = async () => {
+    setLoading(true);
+    try {
+      GetAllTasks((response) => {
+        if (response?.status === 200) {
+          setTaskDetails(response?.data);
+        } else {
+          setError('Failed to fetch tasks');
+        }
+      });
+    } catch (error) {
+      setError('An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    GetAllTasks((response) => {
-      if (response?.status === 200) {
-        setTaskDetails(response?.data);
-      }
-    });
+    fetchTasks();
   }, []);
+
+  const openAddTaskModal = () => {
+    setOpen(true);
+  };
+
+  const closeAddTaskModal = () => {
+    setOpen(false);
+    fetchTasks();
+  };
 
 
 
@@ -36,8 +61,10 @@ const page = () => {
         <h1 className={` text-4xl font-semibold p-5`}>
           To-Do-APP
         </h1>
+        {loading && <div>Loading...</div>}
+        {error && <div>{error}</div>}
         <div className="grid w-full place-items-end p-5">
-          <Button text="Add Task" />
+          <Button text="Add Task" onClick={openAddTaskModal} />
         </div>
         <div
           className="overflow-x-auto"
@@ -106,6 +133,7 @@ const page = () => {
           </table>
         </div>
       </div>
+      <AddTask open={open} onClose={closeAddTaskModal} />
     </div>
   )
 }
