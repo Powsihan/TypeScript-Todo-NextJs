@@ -1,19 +1,20 @@
+import useLoaderStore from '@/store/useLoaderStore';
 import React from 'react'
 
 type ButtonProps = {
   text?: String,
   secondary?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  loading?: boolean;
 }
 
-const Button = ({ text, secondary, onClick, loading }: ButtonProps) => {
+const Button = ({ text, secondary, onClick }: ButtonProps) => {
+  const loading = useLoaderStore((state) => state.loading);
   return (
     <div>
       <button type="button" className={!secondary ?
         "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
         : "py-2.5 px-5 me-2 mb-2 text-sm font-medium text-blue-800 focus:outline-none bg-white rounded-lg border hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-blue-100"}
-        onClick={onClick}>
+        onClick={onClick} disabled={loading}>
         {loading ? (
           <div className="flex items-center">
             <svg

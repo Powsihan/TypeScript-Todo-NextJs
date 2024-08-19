@@ -4,6 +4,7 @@ import Button from './Button';
 import { addTask, updateTask } from '@/api/task';
 import PendingIcon from "@mui/icons-material/Pending";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import useLoaderStore from '@/store/useLoaderStore';
 
 interface Props {
     open: boolean;
@@ -28,7 +29,7 @@ const AddTask = ({ open, onClose, mode, taskToView }: Props) => {
         status: false,
     });
     const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+    const { loading, setLoading } = useLoaderStore();
 
 
 
@@ -203,7 +204,7 @@ const AddTask = ({ open, onClose, mode, taskToView }: Props) => {
                                 </div>
                                 {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
                                 <div className='flex justify-end'>
-                                    <Button text={mode === 'add' ? 'Add Task' : 'Update Task'} onClick={handleSubmit} loading={loading} />
+                                    <Button text={mode === 'add' ? 'Add Task' : 'Update Task'} onClick={handleSubmit}  />
                                     <Button text="Cancel" onClick={onClose} secondary />
                                 </div>
                             </form>

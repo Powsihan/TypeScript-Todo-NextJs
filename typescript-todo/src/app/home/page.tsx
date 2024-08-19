@@ -12,6 +12,7 @@ import ConfirmationModal from '@/components/ConfirmationModal';
 import { getUserInfo, logoutUser } from '@/api/user';
 import useUserStore from '@/store/useUserStore';
 import { useRouter } from 'next/navigation';
+import useLoaderStore from '@/store/useLoaderStore';
 
 interface Task {
   name: string;
@@ -23,7 +24,7 @@ interface Task {
 
 const page = () => {
   const [taskDetails, setTaskDetails] = useState<Task[] | []>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const { loading, setLoading } = useLoaderStore();
   const [error, setError] = useState<string | null>(null);
   const [mode, setMode] = useState<'add' | 'view' | 'edit'>('add');
   const [selectedTaskDetails, setSelectedTaskDetails] = useState<Task | null>(null);
@@ -104,8 +105,10 @@ const page = () => {
 
   const handleDeleteTask = async () => {
     if (!taskToDelete) return;
+    setLoading(true);
     try {
       deleteTask(taskToDelete, (response) => {
+        setLoading(false);
         if (response.status === 200) {
           fetchTasks();
         } else {
@@ -121,7 +124,9 @@ const page = () => {
 
 
   const LogoutUser = () => {
+    setLoading(true);
     logoutUser((response) => {
+      setLoading(false);
       if (response.status === 200) {
         setUserData(null);
         router.push('/');

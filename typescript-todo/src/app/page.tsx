@@ -2,6 +2,7 @@
 
 import { loginUser } from "@/api/user";
 import Button from "@/components/Button";
+import useLoaderStore from "@/store/useLoaderStore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -9,7 +10,7 @@ export default function Home() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const { loading, setLoading } = useLoaderStore();
   const router = useRouter();
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -78,7 +79,7 @@ export default function Home() {
           </div>
           {error && <p className="text-red-600 text-sm">{error}</p>}
           <div className="flex justify-center">
-            <Button text="Sign In" onClick={handleSubmit} loading={loading} /></div>
+            <Button text="Sign In" onClick={handleSubmit} /></div>
           <div className="text-center text-sm mt-4">
             Don't have an account?{" "}
             <span
